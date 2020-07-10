@@ -1,0 +1,8 @@
+*.py[cod]
+.DS_Store
+
+deploy/
+fabfile.py
+.idea/
+.python-version
+static_root/
