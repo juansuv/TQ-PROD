@@ -15,8 +15,10 @@ urlpatterns = [
     path('django-admin/', admin.site.urls),
 
     url(r'^$', wagtail_tq.home.views.home),
+    url(r'^search/$', wagtail_tq.home.views.search,name='search'),
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
+    
 
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in

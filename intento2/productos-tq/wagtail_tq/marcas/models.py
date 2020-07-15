@@ -31,12 +31,18 @@ from taggit.models import Tag as TaggitTag
 from taggit.models import TaggedItemBase
 from wagtailmd.utils import MarkdownField, MarkdownPanel
 
+from wagtail.search import index
 
 class MarcasPage(RoutablePageMixin, Page):
     description = models.CharField(max_length=255, blank=True,)
 
     content_panels = Page.content_panels + [
         FieldPanel('description', classname="full")
+    ]
+
+    search_fields = Page.search_fields + [ # Inherit search_fields from Page
+        index.SearchField('description', partial_match=True),
+        
     ]
 
     def get_context(self, request, *args, **kwargs):
@@ -128,6 +134,19 @@ class PostPage(Page):
         FieldPanel('tags'),
     ]
 
+    search_fields = Page.search_fields + [ # Inherit search_fields from Page
+        index.SearchField('body', partial_match=True),
+        index.SearchField('excerpt', partial_match=True),
+        index.FilterField('date'),
+       
+        
+        index.RelatedFields('categories', [
+            index.SearchField('name'),
+            
+        ]),
+        
+    ]
+
     settings_panels = Page.settings_panels + [
         FieldPanel('date'),
     ]
@@ -167,13 +186,20 @@ class LandingPage(Page):
 
 
 @register_snippet
-class MarcasCategory(models.Model):
+class MarcasCategory(models.Model, index.Indexed):
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, max_length=80)
 
     panels = [
         FieldPanel('name'),
         FieldPanel('slug'),
+    ]
+
+    search_fields = [
+        index.SearchField('name', partial_match=True, boost=10),
+       
+
+       
     ]
 
     def __str__(self):

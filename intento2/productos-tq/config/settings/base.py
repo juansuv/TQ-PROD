@@ -58,8 +58,17 @@ INSTALLED_APPS = [
     'home',
     'marcas',
     'wagtailmd',
+    'search',
+   #'django_elasticsearch_dsl',
 ]
 
+'''
+ELASTICSEARCH_DSL = {
+    'default': {
+        'host': 'localhost:9200'
+    },
+}
+'''
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -186,11 +195,21 @@ WAGTAIL_SITE_NAME = "wagtail_tq"
 
 WAGTAILSEARCH_BACKENDS = {
     'default': {
-        'BACKEND': 'wagtail.search.backends.elasticsearch2',
+        'BACKEND': 'wagtail.search.backends.elasticsearch7',
         'URLS': ['http://localhost:9200'],
         'INDEX': 'wagtail_tq',
         'TIMEOUT': 5,
         'OPTIONS': {},
-        'INDEX_SETTINGS': {},
+        'INDEX_SETTINGS': {
+            'settings':{
+                'index':{
+                    "max_ngram_diff" : 50
+                }
+
+
+
+            }
+
+        },
     }
 }
